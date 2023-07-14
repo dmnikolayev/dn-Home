@@ -1,0 +1,14 @@
+# https://github.com/JensPiegsa/docker-fortune
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dummy-pod
+spec:
+  containers:
+    - name: fortune
+      image: alpine
+      command: ["wget", "echo-deployment.default.svc.cluster.local"]
+      env:
+      - name: DELAY
+        value: "60" 
