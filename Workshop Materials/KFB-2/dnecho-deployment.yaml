@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnecho-deployment
+  labels:
+    app: echo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo
+    spec:
+      containers:
+      - name: echo
+        image: ealen/echo-server
+        ports:
+        - containerPort: 80
+        env:
+        - name: ECHO_TEXT
+          valueFrom:
+            configMapKeyRef:
+              name: cm-dn           # The ConfigMap this value comes from.
+              key: log_level
+        envFrom: # import all with original names
+        - secretRef:
+            name: secret-dn    
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cm-dn
+data:
+  #log_level: "INFO"
+  log_level: "WARN"
+

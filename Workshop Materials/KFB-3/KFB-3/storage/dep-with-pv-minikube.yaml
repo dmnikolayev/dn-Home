@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-with-pv
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      volumes:
+      - name: pages-from-volume #regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?'
+        persistentVolumeClaim:
+          claimName: pvc001
+      containers:
+      - name: my-app1
+        image: nginx
+        resources:
+          requests: 
+            memory: "4Mi"
+            cpu: "2m"
+          limits:
+            memory: "20Mi"
+            cpu: "30m"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: pages-from-volume #regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?'
+          mountPath: "/usr/share/nginx/html" #default nginx pages content dir
+          readOnly: true
+---
+# static PV+PVC config
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc001
+spec:
+  storageClassName: standard 
+  volumeName: pv001
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+    limits:
+      storage: 75Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv001
+spec:
+  storageClassName: standard 
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 500Mi
+  hostPath:
+    path: /data/pv001/ 
+    # do not forget to mount host directory minikube mount {sourceOnHost}:{targetOnVM}
+    # e.g.: minikube mount C:\Work\k8s\k8s-course\KFB-3\storage\www\:/data/pv001/
+---
+# dynamic provisioning PVC no PV required and it'll be automatically allocated
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 750Mi
