@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dnecho-deployment
+  name: echo-deployment
   labels:
     app: echo
 spec:
@@ -27,7 +27,7 @@ spec:
               key: log_level
         envFrom: # import all with original names
         - secretRef:
-            name: secret-dn    
+            name: secret-demo    
 ---
 apiVersion: v1
 kind: ConfigMap

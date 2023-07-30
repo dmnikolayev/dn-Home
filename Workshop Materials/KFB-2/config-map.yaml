@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cm-demo
+  name: dn-demo
 data:
   # property-like keys; each key maps to a simple value
   log_level: "INFO"
@@ -24,7 +24,7 @@ spec:
         - name: LOG_LEVEL # ENV VAR name
           valueFrom:
             configMapKeyRef:
-              name: cm-demo           # The ConfigMap this value comes from.
+              name: dn-demo           # The ConfigMap this value comes from.
               key: log_level          # The key to fetch.
       # All rows below belongs to "config map as a mounted file" approach
       volumeMounts:
@@ -37,7 +37,7 @@ spec:
   - name: config
     configMap:
       # Provide the name of the ConfigMap you want to mount.
-      name: cm-demo
+      name: dn-demo
       # An array of keys from the ConfigMap to create as files
       items:
       - key: "app.properties"
