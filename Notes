@@ -8,3 +8,13 @@ kubectl apply -f k8s-dashboard-sa.yaml
 kubectl -n kubernetes-dashboard create token admin-user
 kubectl proxy
 Go to http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/ 
+
+--Create ConfigMap--
+kubectl create configmap dn-demo --from-literal='log_level=INFO' --from-file=app.properties=my-local.props
+
+--Create Secret--
+kubectl create secret generic secret-demo --from-literal='username=dn' --from-literal='password=magic'
+
+Debuging
+kubectl.exe top pod
+kubectl.exe top node
