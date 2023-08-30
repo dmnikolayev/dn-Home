@@ -1,0 +1,11 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco install wireguard -y
+$Folder = 'C:\wg'
+"Test to see if folder [$Folder]  exists"
+if (Test-Path -Path $Folder) {
+    "Path exists!"
+} else {
+    New-Item -ItemType "directory" -Path "c:\wg"
+}
+
+"C:\Program Files\WireGuard\wireguard.exe /installtunnelservice C:\wg\Master_Lviv.conf"
